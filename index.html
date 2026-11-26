@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mezgeb.bynati</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a6f61">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#eef3f2;--card:#fff;--tx:#10201e;--mut:#5b6f6c;--ln:#d6e1df;--ac:#0f9d8a;--acd:#0a6f61;--ok:#1b8f50;--no:#d6453d;--am:#c88a0a;--hero:#0a6f61;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1514;--card:#15201f;--tx:#e6f1ef;--mut:#8fa6a2;--ln:#243533;--ac:#2cc4ad;--acd:#0f5f55;--ok:#3ccf82;--no:#ff7168;--am:#f0b43a;--hero:#0f5f55}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"Noto Sans Ethiopic","Nyala",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+button,input{font:inherit;color:inherit}
+header{padding:14px 14px 6px;max-width:640px;margin:0 auto}
+.brand{font-size:24px;font-weight:800;letter-spacing:-.5px}.brand span{color:var(--ac)}
+.dr{display:flex;gap:6px;margin-top:10px;align-items:center}
+.dr input{flex:1;min-width:0;padding:10px;border:1px solid var(--ln);border-radius:12px;background:var(--card);text-align:center}
+.dr button{border:1px solid var(--ln);background:var(--card);border-radius:12px;width:44px;height:42px;font-size:20px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:6px 14px 20px}
+.hero{background:var(--hero);color:#fff;border-radius:18px;padding:18px;margin:10px 0}
+.hero small{opacity:.85}.hero b{display:block;font-size:34px;margin-top:2px}
+.hero.neg{background:#8e2a24}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid>div{background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:12px}
+.grid small,.li small,.hint{color:var(--mut);font-size:12px;display:block}
+.grid b{font-size:18px}
+h3{margin:20px 0 8px;font-size:15px}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.li button{border:0;background:none;color:var(--no);font-size:18px;cursor:pointer;padding:6px}
+.f{background:var(--card);border:1px solid var(--ln);border-radius:16px;padding:14px}
+.f label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}.f label:first-child{margin-top:0}
+.f input,textarea{width:100%;padding:12px;border:1px solid var(--ln);border-radius:12px;background:var(--bg);font-size:16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;margin-top:14px;padding:14px;border:0;border-radius:14px;background:var(--ac);color:#04201c;font-weight:800;font-size:16px;cursor:pointer}
+.btn.s{background:var(--card);color:var(--tx);border:1px solid var(--ln);font-weight:600;margin-top:8px}
+.pv{margin-top:10px;font-weight:700}
+.pos{color:var(--ok)}.neg2{color:var(--no)}
+.tb{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tb button{flex:1;border:0;background:none;padding:10px 2px;font-size:12px;color:var(--mut);cursor:pointer}
+.tb button i{display:block;font-style:normal;font-size:20px}
+.tb button.on{color:var(--ac);font-weight:700}
+.st{width:100%;border-collapse:collapse;font-size:14px}.st td,.st th{padding:8px 6px;border-bottom:1px solid var(--ln);text-align:right}.st td:first-child,.st th:first-child{text-align:left}
+.st th{color:var(--mut);font-weight:600;font-size:12px}
+.sw{overflow-x:auto;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:4px 8px}
+#to{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));background:#222;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:9;display:none}
+.empty{color:var(--mut);text-align:center;padding:14px;font-size:14px}
+textarea{height:90px;font-size:12px}
+</style>
+</head>
+<body>
+<header><div class="brand">Mezgeb<span>.bynati</span></div>
+<div class="dr"><button id="pv" aria-label="ትናንት">‹</button><input type="date" id="dp"><button id="nx" aria-label="ነገ">›</button></div></header>
+<main id="m"></main>
+<div id="to"></div>
+<nav class="tb" id="tb"></nav>
+<script>
+const K='mezgeb.bynati.v1';
+let S={stock:[],sales:[],exp:[]};
+try{const r=localStorage.getItem(K);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const $=id=>document.getElementById(id);
+const p2=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const m=n=>(Math.round(n*100)/100).toLocaleString('en-US');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+let day=today(),tab='sum';
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){toast('ማስቀመጥ አልተቻለም')}}
+let tt;function toast(t){const e=$('to');e.textContent=t;e.style.display='block';clearTimeout(tt);tt=setTimeout(()=>e.style.display='none',2200)}
+function inv(){const o={};S.stock.forEach(x=>{const k=x.name.toLowerCase();const r=o[k]||(o[k]={name:x.name,qi:0,ci:0,qo:0});r.qi+=x.qty;r.ci+=x.qty*x.cost});
+ S.sales.forEach(x=>{const r=o[x.name.toLowerCase()];if(r)r.qo+=x.qty});
+ Object.values(o).forEach(r=>{r.avg=r.qi?r.ci/r.qi:0;r.left=r.qi-r.qo});return o}
+function tot(d){const s=S.sales.filter(x=>x.date===d),e=S.exp.filter(x=>x.date===d);
+ const rev=s.reduce((a,x)=>a+x.qty*x.price,0),cogs=s.reduce((a,x)=>a+x.qty*x.cost,0),ex=e.reduce((a,x)=>a+x.amount,0);
+ return{rev,cogs,gp:rev-cogs,ex,net:rev-cogs-ex,s,e}}
+const num=id=>parseFloat($(id).value);
+const TABS=[['sum','📊','ዛሬ'],['buy','📦','ግዢ'],['sell','💰','ሽያጭ'],['exp','🧾','ወጪ'],['rep','📅','ሪፖርት']];
+function nav(){$('tb').innerHTML=TABS.map(([k,i,n])=>`<button data-t="${k}" class="${k===tab?'on':''}"><i>${i}</i>${n}</button>`).join('');
+ $('tb').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()})}
+const sign=n=>`<span class="${n<0?'neg2':'pos'}">${m(n)}</span>`;
+function saleList(a){return a.length?a.map(x=>`<div class="li"><div><b>${esc(x.name)}</b> ×${x.qty}<small>ሽያጭ ${m(x.qty*x.price)} · ትርፍ ${sign((x.price-x.cost)*x.qty)}</small></div><button data-del="s:${x.id}" aria-label="ሰርዝ">✕</button></div>`).join(''):'<div class="empty">ምንም የለም</div>'}
+function expList(a){return a.length?a.map(x=>`<div class="li"><div><b>${esc(x.desc)}</b><small>${m(x.amount)} ብር</small></div><button data-del="e:${x.id}" aria-label="ሰርዝ">✕</button></div>`).join(''):'<div class="empty">ምንም የለም</div>'}
+function saleTable(a){if(!a.length)return '<div class="empty">ምንም የለም</div>';const rv=a.reduce((s,x)=>s+x.qty*x.price,0),gp=a.reduce((s,x)=>s+(x.price-x.cost)*x.qty,0);
+ const r=a.map(x=>`<tr><td>${esc(x.name)}${x.qty!==1?' ×'+x.qty:''}</td><td>${m(x.qty*x.price)}</td><td>${sign((x.price-x.cost)*x.qty)}</td><td><button data-del="s:${x.id}" aria-label="ሰርዝ" style="border:0;background:none;color:var(--no);font-size:16px;cursor:pointer">✕</button></td></tr>`).join('');
+ return `<div class="sw"><table class="st"><tr><th>እቃ</th><th>የተሸጠበት ዋጋ</th><th>የእቃው ትርፍ</th><th></th></tr>${r}<tr style="font-weight:800"><td>የእለቱ ድምር</td><td>${m(rv)}</td><td>${sign(gp)}</td><td></td></tr></table></div><div class="hero" style="margin-top:10px;padding:14px"><small>የእለቱ አጠቃላይ የሽያጭ ትርፍ</small><b style="font-size:26px">${m(gp)} ብር</b></div>`}
+function vSum(){const t=tot(day),lab=day===today()?'የዛሬ':day;
+ return`<div class="hero ${t.net<0?'neg':''}"><small>${lab} የተጣራ ትርፍ</small><b>${m(t.net)} ብር</b></div>
+<div class="grid"><div><small>ጠቅላላ ሽያጭ</small><b>${m(t.rev)}</b></div><div><small>የተሸጡ እቃዎች ዋጋ</small><b>${m(t.cogs)}</b></div><div><small>የእቃ ትርፍ (ከወጪ በፊት)</small><b>${sign(t.gp)}</b></div><div><small>የእለት ወጪ</small><b>${m(t.ex)}</b></div></div>
+<h3>የተሸጡ እቃዎች</h3>${saleTable(t.s)}<h3>ወጪዎች</h3>${expList(t.e)}`}
+function vBuy(){const I=Object.values(inv()),ps=S.stock.filter(x=>x.date===day);
+ return`<div class="f"><label>የእቃ ስም (ለምሳሌ Tecno Spark 10)</label><input id="bn" autocomplete="off">
+<div class="two"><div><label>ብዛት</label><input id="bq" inputmode="decimal" value="1"></div><div><label>የአንዱ መግዣ ዋጋ (ብር)</label><input id="bc" inputmode="decimal"></div></div>
+<label>ማስታወሻ / IMEI (አማራጭ)</label><input id="bt"><button class="btn" id="add">እቃ አስገባ</button></div>
+<h3>በዚህ ቀን የገቡ እቃዎች</h3>${ps.length?ps.map(x=>`<div class="li"><div><b>${esc(x.name)}</b> ×${x.qty}<small>መግዣ ${m(x.cost)} · ድምር ${m(x.qty*x.cost)}${x.note?' · '+esc(x.note):''}</small></div><button data-del="b:${x.id}" aria-label="ሰርዝ">✕</button></div>`).join(''):'<div class="empty">ምንም የለም</div>'}
+<h3>የቀረ እቃ (ስቶክ)</h3>${I.length?`<div class="sw"><table class="st"><tr><th>እቃ</th><th>የቀረ</th><th>አማካይ መግዣ</th></tr>${I.map(r=>`<tr><td>${esc(r.name)}</td><td>${r.left}</td><td>${m(r.avg)}</td></tr>`).join('')}</table></div>`:'<div class="empty">ስቶክ የለም</div>'}`}
+function vSell(){const I=Object.values(inv());
+ return`<div class="f"><label>የእቃ ስም</label><input id="sn" list="dl" autocomplete="off"><datalist id="dl">${I.map(r=>`<option value="${esc(r.name)}">የቀረ ${r.left}</option>`).join('')}</datalist><span class="hint" id="sh"></span>
+<div class="two"><div><label>ብዛት</label><input id="sq" inputmode="decimal" value="1"></div><div><label>የአንዱ መሸጫ ዋጋ</label><input id="sp" inputmode="decimal"></div></div>
+<label>የአንዱ መግዣ ዋጋ (በራሱ ይሞላል፣ ማስተካከል ይቻላል)</label><input id="sc" inputmode="decimal">
+<div class="pv" id="spv"></div><button class="btn" id="add">ሽያጭ መዝግብ</button></div>
+<h3>በዚህ ቀን የተሸጡ</h3>${saleList(tot(day).s)}`}
+function vExp(){return`<div class="f"><label>የወጪ ዓይነት (ሻይ፣ ትራንስፖርት፣ ኪራይ ...)</label><input id="ed"><label>መጠን (ብር)</label><input id="ea" inputmode="decimal"><button class="btn" id="add">ወጪ መዝግብ</button></div><h3>በዚህ ቀን የወጡ</h3>${expList(tot(day).e)}`}
+function vRep(){const ds=[...new Set([...S.sales,...S.exp,...S.stock].map(x=>x.date))].sort().reverse();
+ const mon=day.slice(0,7);let mn=0,al=0;ds.forEach(d=>{const n=tot(d).net;al+=n;if(d.startsWith(mon))mn+=n});
+ return`<div class="grid"><div><small>የወሩ የተጣራ ትርፍ (${mon})</small><b>${sign(mn)}</b></div><div><small>ጠቅላላ ትርፍ</small><b>${sign(al)}</b></div></div>
+<h3>የቀናት ዝርዝር (ለመክፈት ንካ)</h3>${ds.length?ds.map(d=>{const t=tot(d);return`<div class="li" data-go="${d}" style="cursor:pointer"><div><b>${d}</b><small>ሽያጭ ${m(t.rev)} · ወጪ ${m(t.ex)}</small></div><b>${sign(t.net)}</b></div>`}).join(''):'<div class="empty">ገና ምንም አልተመዘገበም</div>'}
+<h3>ዳታ ቅጂ (backup)</h3><div class="f"><span class="hint">ዳታህ በዚህ ስልክ ብራውዘር ውስጥ ነው የሚቀመጠው። ብራውዘሩን ዳታ ካጸዳህ ይጠፋል፤ ስለዚህ አልፎ አልፎ ቅጂ ወስደህ በሌላ ቦታ (ለምሳሌ ቴሌግራም Saved Messages) አስቀምጥ።</span><textarea id="bk"></textarea><button class="btn s" id="cp">ቅጂ ፍጠር እና ቅዳ</button><button class="btn s" id="rs">ከቅጂ መልስ (አሁን ያለውን ይተካል)</button></div>`}
+function render(){nav();$('dp').value=day;const v={sum:vSum,buy:vBuy,sell:vSell,exp:vExp,rep:vRep}[tab]();$('m').innerHTML=v;bind();window.scrollTo(0,0)}
+function bind(){
+ document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const[k,id]=b.dataset.del.split(':');const a={s:'sales',e:'exp',b:'stock'}[k];S[a]=S[a].filter(x=>x.id!==id);save();render();toast('ተሰርዟል')});
+ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{day=b.dataset.go;tab='sum';render()});
+ const add=$('add');
+ if(tab==='buy'&&add)add.onclick=()=>{const n=$('bn').value.trim(),q=num('bq'),c=num('bc');if(!n||!(q>0)||!(c>=0)||isNaN(c))return toast('ስም፣ ብዛት እና ዋጋ ያስገቡ');S.stock.push({id:uid(),date:day,name:n,qty:q,cost:c,note:$('bt').value.trim()});save();render();toast('እቃ ገብቷል ✓')};
+ if(tab==='sell'){const I=inv(),upd=()=>{const r=I[$('sn').value.trim().toLowerCase()];$('sh').textContent=r?`የቀረ፦ ${r.left} · አማካይ መግዣ፦ ${m(r.avg)}`:'';return r};
+  $('sn').oninput=()=>{const r=upd();if(r)$('sc').value=Math.round(r.avg*100)/100;pv()};
+  const pv=()=>{const q=num('sq'),p=num('sp'),c=num('sc');$('spv').innerHTML=(q>0&&p>=0&&c>=0)?`ትርፍ፦ ${sign((p-c)*q)} ብር`:''};
+  ['sq','sp','sc'].forEach(i=>$(i).oninput=pv);
+  add.onclick=()=>{const n=$('sn').value.trim(),q=num('sq'),p=num('sp'),c=num('sc');if(!n||!(q>0)||isNaN(p)||isNaN(c))return toast('ስም፣ ብዛት፣ መሸጫ እና መግዣ ዋጋ ያስገቡ');const r=I[n.toLowerCase()];S.sales.push({id:uid(),date:day,name:r?r.name:n,qty:q,price:p,cost:c});save();render();toast(r&&q>r.left?'ተመዝግቧል (ከስቶክ በላይ ሸጠሃል!)':'ሽያጭ ተመዝግቧል ✓')}}
+ if(tab==='exp')add.onclick=()=>{const d=$('ed').value.trim(),a=num('ea');if(!d||!(a>0))return toast('የወጪ ዓይነት እና መጠን ያስገቡ');S.exp.push({id:uid(),date:day,desc:d,amount:a});save();render();toast('ወጪ ተመዝግቧል ✓')};
+ if(tab==='rep'){$('cp').onclick=()=>{const j=JSON.stringify(S);$('bk').value=j;try{navigator.clipboard.writeText(j).then(()=>toast('ተቀድቷል ✓'),()=>toast('ጽሑፉን ረጅም ተጭነህ ቅዳ'))}catch(e){toast('ጽሑፉን ረጅም ተጭነህ ቅዳ')}};
+  $('rs').onclick=()=>{try{const j=JSON.parse($('bk').value);if(!j||!Array.isArray(j.sales)||!Array.isArray(j.stock)||!Array.isArray(j.exp))throw 0;S=j;save();render();toast('ዳታ ተመልሷል ✓')}catch(e){toast('ቅጂው ትክክል አይደለም')}}}
+}
+$('dp').onchange=()=>{if($('dp').value){day=$('dp').value;render()}};
+const shift=n=>{const d=new Date(day+'T12:00:00');d.setDate(d.getDate()+n);day=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());render()};
+$('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})})}
+</script>
+</body>
+</html>
